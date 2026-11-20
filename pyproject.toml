@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-eval-harness"
+version = "1.0.0"
+description = "Deterministic async evaluation, SLA verification, and safety harness for LLM tool-calling and MCP agents."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    {name = "Muhammed Buğra Çiftçi"}
+]
+
+[project.scripts]
+agent-eval = "agent_eval.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

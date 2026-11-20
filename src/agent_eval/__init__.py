@@ -1,42 +1,70 @@
-from .models import (
-    AgentTrace,
-    CaseReport,
-    EvalCase,
-    MetricResult,
-    SuiteReport,
-    ToolCall,
-)
+from .diff import CaseDelta, SuiteDiff, compare_suite_reports, render_diff_markdown
 from .evaluators import (
     ArgumentSchemaEvaluator,
+    CostBudgetEvaluator,
     Evaluator,
+    HallucinatedToolEvaluator,
+    HeuristicRubricJudge,
+    JSONSchemaOutputEvaluator,
+    JudgeModelProtocol,
+    LLMJudgeEvaluator,
     LatencyBudgetEvaluator,
     LoopGuardEvaluator,
+    OutputContentEvaluator,
     SafetyPIIGuardEvaluator,
     TokenBudgetEvaluator,
     ToolSequenceEvaluator,
     default_evaluators,
 )
-from .runner import AgentAdapter, EvalRunner, ReplayAgentAdapter
+from .html_reporter import render_html_report
+from .models import (
+    AgentTrace,
+    CaseReport,
+    ConversationTurn,
+    EvalCase,
+    MetricResult,
+    SuiteReport,
+    ToolCall,
+)
+from .pricing import CostBreakdown, DEFAULT_MODEL_PRICING, ModelPricing, estimate_cost
 from .reporter import render_json_report, render_markdown_report
+from .runner import AgentAdapter, EvalRunner, ReplayAgentAdapter
 
 __all__ = [
     "AgentAdapter",
     "AgentTrace",
     "ArgumentSchemaEvaluator",
+    "CaseDelta",
     "CaseReport",
+    "ConversationTurn",
+    "CostBreakdown",
+    "CostBudgetEvaluator",
+    "DEFAULT_MODEL_PRICING",
     "EvalCase",
     "EvalRunner",
     "Evaluator",
+    "HallucinatedToolEvaluator",
+    "HeuristicRubricJudge",
+    "JSONSchemaOutputEvaluator",
+    "JudgeModelProtocol",
+    "LLMJudgeEvaluator",
     "LatencyBudgetEvaluator",
     "LoopGuardEvaluator",
     "MetricResult",
+    "ModelPricing",
+    "OutputContentEvaluator",
     "ReplayAgentAdapter",
     "SafetyPIIGuardEvaluator",
+    "SuiteDiff",
     "SuiteReport",
     "TokenBudgetEvaluator",
     "ToolCall",
     "ToolSequenceEvaluator",
+    "compare_suite_reports",
     "default_evaluators",
+    "estimate_cost",
+    "render_diff_markdown",
+    "render_html_report",
     "render_json_report",
     "render_markdown_report",
 ]

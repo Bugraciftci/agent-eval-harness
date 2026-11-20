@@ -6,6 +6,7 @@ from typing import Protocol, Sequence
 
 from .evaluators import Evaluator, default_evaluators
 from .models import AgentTrace, CaseReport, EvalCase, SuiteReport
+from .pricing import estimate_cost
 
 
 class AgentAdapter(Protocol):
@@ -49,12 +50,20 @@ class EvalRunner:
         total_weight = sum(m.weight for m in metrics) or 1.0
         weighted_score = sum(m.score * m.weight for m in metrics) / total_weight
         passed = all(m.passed for m in metrics)
+        cost = estimate_cost(
+            model_name=trace.model_name,
+            prompt_tokens=trace.prompt_tokens,
+            completion_tokens=trace.completion_tokens,
+            cached_prompt_tokens=trace.cached_prompt_tokens,
+        )
         return CaseReport(
             case_id=case.case_id,
+            model_name=trace.model_name,
             passed=passed,
             weighted_score=round(weighted_score, 4),
             total_latency_ms=trace.total_latency_ms,
             total_tokens=trace.total_tokens,
+            estimated_cost_usd=cost.total_cost_usd,
             metrics=metrics,
         )
 
@@ -73,6 +82,7 @@ class EvalRunner:
         latencies = sorted(r.total_latency_ms for r in reports)
         p95 = _percentile(latencies, 0.95)
         total_tokens = sum(r.total_tokens for r in reports)
+        total_cost = round(sum(r.estimated_cost_usd for r in reports), 6)
 
         return SuiteReport(
             suite_name=suite_name,
@@ -82,6 +92,7 @@ class EvalRunner:
             average_score=avg_score,
             p95_latency_ms=round(p95, 2),
             total_tokens=total_tokens,
+            total_cost_usd=total_cost,
             cases=reports,
         )
 

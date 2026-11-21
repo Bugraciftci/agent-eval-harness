@@ -1,3 +1,9 @@
+from .adversarial import (
+    DataExfiltrationGuardEvaluator,
+    PathTraversalAndCommandInjectionEvaluator,
+    PromptInjectionGuardEvaluator,
+    adversarial_security_evaluators,
+)
 from .diff import CaseDelta, SuiteDiff, compare_suite_reports, render_diff_markdown
 from .evaluators import (
     ArgumentSchemaEvaluator,
@@ -40,6 +46,7 @@ __all__ = [
     "CostBreakdown",
     "CostBudgetEvaluator",
     "DEFAULT_MODEL_PRICING",
+    "DataExfiltrationGuardEvaluator",
     "EvalCase",
     "EvalRunner",
     "Evaluator",
@@ -53,6 +60,8 @@ __all__ = [
     "MetricResult",
     "ModelPricing",
     "OutputContentEvaluator",
+    "PathTraversalAndCommandInjectionEvaluator",
+    "PromptInjectionGuardEvaluator",
     "ReplayAgentAdapter",
     "SafetyPIIGuardEvaluator",
     "SuiteDiff",
@@ -60,6 +69,7 @@ __all__ = [
     "TokenBudgetEvaluator",
     "ToolCall",
     "ToolSequenceEvaluator",
+    "adversarial_security_evaluators",
     "compare_suite_reports",
     "default_evaluators",
     "estimate_cost",

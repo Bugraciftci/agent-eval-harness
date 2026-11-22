@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Python_3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
   <img src="https://img.shields.io/badge/Core_Deps-Zero_Stdlib_Only-22C55E?style=for-the-badge" alt="Zero Deps" />
-  <img src="https://img.shields.io/badge/Evaluators-11_Built--In-38BDF8?style=for-the-badge" alt="Evaluators" />
+  <img src="https://img.shields.io/badge/Evaluators-14_Built--In-38BDF8?style=for-the-badge" alt="Evaluators" />
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
 </p>
 
@@ -18,15 +18,18 @@ flowchart LR
     S["JSON Benchmark Suite<br/>Single & Multi-Turn Cases"] --> R["Async EvalRunner<br/>asyncio.Semaphore Concurrency"]
     R --> A["AgentAdapter Protocol<br/>Live LLM · MCP · Offline Replay"]
     A --> T["AgentTrace + Cost Engine<br/>Tools · Turns · Latency · Tokens · USD"]
-    T --> E["11 Evaluators<br/>Sequence · Hallucination · Args · SLA · Cost · Loop · PII · JSON · Judge"]
+    T --> E["14 Evaluators<br/>Sequence · Hallucination · Args · SLA · Cost · Loop · PII · JSON · Judge · Prompt-Injection · Path/Cmd · Exfiltration"]
     E --> REP["Reporters & CI Gate<br/>Markdown · JSON · Self-Contained HTML SVG"]
     REP --> DIFF["Regression Diff Engine<br/>agent-eval diff --fail-on-regression"]
 ```
 
-## 11 Built-In Evaluators
+## 14 Built-In Evaluators
 
 | Evaluator | Weight | What It Verifies |
 | :--- | :---: | :--- |
+| `PathTraversalAndCommandInjectionEvaluator` | `2.5` | Blocks `../`, `/etc/passwd`, `~/.ssh/`, and injected shell commands in MCP arguments (`adversarial.py`) |
+| `PromptInjectionGuardEvaluator` | `2.0` | Detects indirect prompt-injection compliance markers in tool arguments and outputs (`adversarial.py`) |
+| `DataExfiltrationGuardEvaluator` | `2.0` | Flags unauthorized outbound HTTP/webhook hosts in tool call payloads (`adversarial.py`) |
 | `ToolSequenceEvaluator` | `2.0` | Ordered or unordered expected tool/MCP call trajectories |
 | `HallucinatedToolEvaluator` | `2.0` | Rejects unauthorized or hallucinated tools outside the MCP manifest |
 | `SafetyPIIGuardEvaluator` | `2.0` | Flags unredacted emails, credit cards, and API keys (`sk-`, `ghp_`, `AKIA`) |
@@ -50,9 +53,10 @@ PYTHONPATH=src python3 -m agent_eval.cli run \
   --suite examples/mcp_tool_suite.json \
   --format markdown
 
-# 2. Export a self-contained dark-mode HTML dashboard with inline SVG charts
+# 2. Export a self-contained dark-mode HTML dashboard with adversarial MCP security guards enabled
 PYTHONPATH=src python3 -m agent_eval.cli run \
   --suite examples/mcp_tool_suite.json \
+  --security \
   --format html \
   --out eval_report.html
 

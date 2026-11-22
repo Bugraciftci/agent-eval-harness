@@ -314,6 +314,27 @@ class TestRunnerDiffAndCLI(unittest.TestCase):
         self.assertFalse(PathTraversalAndCommandInjectionEvaluator().evaluate(case, hijacked_trace).passed)
         self.assertFalse(DataExfiltrationGuardEvaluator().evaluate(case, hijacked_trace).passed)
 
+    def test_cli_run_with_security_flag(self):
+        suite_path = Path(__file__).resolve().parent.parent / "examples" / "mcp_tool_suite.json"
+        with tempfile.TemporaryDirectory() as tmp:
+            sec_json = Path(tmp) / "security_report.json"
+            rc = cli_main([
+                "run",
+                "--suite",
+                str(suite_path),
+                "--security",
+                "--format",
+                "json",
+                "--out",
+                str(sec_json),
+            ])
+            self.assertEqual(rc, 0)
+            payload = json.loads(sec_json.read_text(encoding="utf-8"))
+            metric_names = {m["evaluator"] for m in payload["cases"][0]["metrics"]}
+            self.assertIn("prompt_injection_guard", metric_names)
+            self.assertIn("path_and_command_injection_guard", metric_names)
+            self.assertIn("data_exfiltration_guard", metric_names)
+
 
 if __name__ == "__main__":
     unittest.main()

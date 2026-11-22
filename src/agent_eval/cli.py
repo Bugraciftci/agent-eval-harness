@@ -7,7 +7,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from .adversarial import adversarial_security_evaluators
 from .diff import compare_suite_reports, render_diff_markdown
+from .evaluators import default_evaluators
 from .html_reporter import render_html_report
 from .models import AgentTrace, ConversationTurn, EvalCase, ToolCall
 from .reporter import render_json_report, render_markdown_report
@@ -103,6 +105,11 @@ def build_parser() -> argparse.ArgumentParser:
     run_cmd.add_argument("--out", type=Path, default=None, help="Optional output file path.")
     run_cmd.add_argument("--min-pass-rate", type=float, default=0.0, help="CI gate minimum pass rate [0-1].")
     run_cmd.add_argument("--concurrency", type=int, default=8, help="Max concurrent evaluations.")
+    run_cmd.add_argument(
+        "--security",
+        action="store_true",
+        help="Include adversarial MCP security evaluators (prompt injection, path/command injection, data exfiltration).",
+    )
 
     diff_cmd = sub.add_parser("diff", help="Compare baseline vs. candidate JSON suite reports.")
     diff_cmd.add_argument("--baseline", required=True, type=Path, help="Baseline JSON report path.")
@@ -119,7 +126,16 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "run":
         suite_name, cases, traces = load_suite_file(args.suite)
-        runner = EvalRunner(adapter=ReplayAgentAdapter(traces), max_concurrency=args.concurrency)
+        evaluators = (
+            default_evaluators() + adversarial_security_evaluators()
+            if args.security
+            else default_evaluators()
+        )
+        runner = EvalRunner(
+            adapter=ReplayAgentAdapter(traces),
+            evaluators=evaluators,
+            max_concurrency=args.concurrency,
+        )
         report = asyncio.run(runner.run_suite(suite_name, cases))
         if args.format == "json":
             rendered = render_json_report(report)

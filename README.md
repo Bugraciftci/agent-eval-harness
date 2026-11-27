@@ -3,6 +3,9 @@
 </div>
 
 <p align="center">
+  <a href="https://github.com/Bugraciftci/agent-eval-harness/actions/workflows/ci.yml"><img src="https://github.com/Bugraciftci/agent-eval-harness/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/Bugraciftci/agent-eval-harness/releases/tag/v2.0.0"><img src="https://img.shields.io/badge/Release-v2.0.0-0EA5E9?style=for-the-badge" alt="Release v2.0.0" /></a>
+  <a href="https://bugraciftci.github.io/agent-eval-harness/"><img src="https://img.shields.io/badge/Live_Demo-HTML_Eval_Report-6366F1?style=for-the-badge" alt="Live Demo" /></a>
   <img src="https://img.shields.io/badge/Python_3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python" />
   <img src="https://img.shields.io/badge/Core_Deps-Zero_Stdlib_Only-22C55E?style=for-the-badge" alt="Zero Deps" />
   <img src="https://img.shields.io/badge/Evaluators-14_Built--In-38BDF8?style=for-the-badge" alt="Evaluators" />
@@ -10,6 +13,8 @@
 </p>
 
 Deterministic **async Python evaluation, cost modeling, and regression-diff studio** for LLM tool-calling and Model Context Protocol (MCP) agents — with **zero external runtime dependencies**.
+
+> 📊 **Live Interactive Report:** [MCP Security & Eval Dashboard (GitHub Pages)](https://bugraciftci.github.io/agent-eval-harness/)
 
 ## Architecture
 

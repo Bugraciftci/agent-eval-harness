@@ -1,0 +1,17 @@
+name: Bug Report
+description: Report a bug or unexpected evaluation behavior
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Description
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction Steps
+    validations:
+      required: true

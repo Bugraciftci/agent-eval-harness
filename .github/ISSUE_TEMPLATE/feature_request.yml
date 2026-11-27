@@ -1,0 +1,11 @@
+name: Feature Request
+description: Propose a new evaluator or reporter feature
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true

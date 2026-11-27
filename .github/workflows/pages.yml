@@ -24,7 +24,7 @@ jobs:
           python-version: "3.12"
       - name: Generate Live MCP Security & Eval HTML Report
         run: PYTHONPATH=src python scripts/generate_demo_report.py --out site/index.html
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: ./site
 
